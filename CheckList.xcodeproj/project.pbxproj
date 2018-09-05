@@ -39,11 +39,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3015780D213FDE900031DDFF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3015780B213EB89E0031DDFF /* AddItemViewController.swift */,
+				30D781DB2134118100A786A3 /* ChecklistViewController.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3015780E213FDEA10031DDFF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				30D781EB213585E200A786A3 /* CheckListItem.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		30D781CD2134118100A786A3 = {
 			isa = PBXGroup;
 			children = (
 				30D781D82134118100A786A3 /* CheckList */,
+				3015780E213FDEA10031DDFF /* Models */,
 				30D781D72134118100A786A3 /* Products */,
+				3015780D213FDE900031DDFF /* Views */,
 			);
 			sourceTree = "<group>";
 		};
@@ -59,13 +78,10 @@
 			isa = PBXGroup;
 			children = (
 				30D781D92134118100A786A3 /* AppDelegate.swift */,
-				30D781DB2134118100A786A3 /* ChecklistViewController.swift */,
 				30D781DD2134118100A786A3 /* Main.storyboard */,
 				30D781E02134118200A786A3 /* Assets.xcassets */,
 				30D781E22134118200A786A3 /* LaunchScreen.storyboard */,
 				30D781E52134118200A786A3 /* Info.plist */,
-				30D781EB213585E200A786A3 /* CheckListItem.swift */,
-				3015780B213EB89E0031DDFF /* AddItemViewController.swift */,
 			);
 			path = CheckList;
 			sourceTree = "<group>";
