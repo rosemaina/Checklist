@@ -8,10 +8,14 @@
 
 import Foundation
 
-class CheckListItem {
+class CheckListItem:NSObject {
+    
+    // MARK: - Public Instance Properties
     
     var text = ""
     var checked = false
+    
+    // MARK: - Instance Methods
     
     func toggleChecked() {
         checked = !checked

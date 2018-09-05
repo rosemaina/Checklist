@@ -8,7 +8,9 @@
 
 import UIKit
 
-class ChecklistViewController: UITableViewController {
+class ChecklistViewController: UITableViewController, ItemDetailViewDelegate {
+
+    // MARK: Public Instance Properties
     
     var items: [CheckListItem]
     
@@ -20,17 +22,17 @@ class ChecklistViewController: UITableViewController {
         row0Item.text = "Walk the dog"
         row0Item.checked = false
         items.append(row0Item)
-
+        
         let row1Item = CheckListItem()
         row1Item.text = "Brush my teeth"
         row1Item.checked = false
         items.append(row1Item)
-
+        
         let row2Item = CheckListItem()
         row2Item.text = "Learn iOS Development"
         row2Item.checked = false
         items.append(row2Item)
-
+        
         let row3Item = CheckListItem()
         row3Item.text = "Soccer practice"
         row3Item.checked = false
@@ -62,39 +64,20 @@ class ChecklistViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         items.remove(at: indexPath.row)
-       
-//        tableView.reloadData()
+        
+        //        tableView.reloadData()
         let indexPaths = [indexPath]
         tableView.deleteRows(at: indexPaths, with: .automatic)
     }
     
-    @objc func addTapped() {
-//        let newRowIndex = items.count
-//        let item = CheckListItem()
-//
-////        item.text = " I am a new row"
-//        item.checked = true
-//
-//        var titles = ["Take one", "Take two", "Take three", "Take four", "Take five", "Take six"]
-//
-//        let randomNumber = arc4random_uniform(UInt32(titles.count))
-//        let title = titles[Int(randomNumber)]
-//
-//        item.text = title
-//        items.append(item)
-//
-//        let indexPath = IndexPath(row: newRowIndex, section: 0)
-//        let indexPaths = [indexPath]
-//
-//        tableView.insertRows(at: indexPaths, with: .automatic)
-    }
+    // MARK: - DataSource Methods
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
@@ -111,7 +94,7 @@ class ChecklistViewController: UITableViewController {
         return cell
     }
     
-    // MARK: - Delegate methods
+    // MARK: - Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath) {
@@ -124,18 +107,88 @@ class ChecklistViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    func configureText(for cell: UITableViewCell, with item: CheckListItem){
-        let label = cell.viewWithTag(1000) as! UILabel
-        label.text = item.text
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "addItem" {
+            let controller = segue.destination as!  ItemDetailView
+            controller.delegate = self
+        } else if segue.identifier == "editItem" {
+            let controller = segue.destination as! ItemDetailView
+            controller.delegate = self
+            
+            if let indexPath = tableView.indexPath(for: sender as! UITableViewCell) {
+                
+                controller.itemToEdit = items[indexPath.row]
+            }
+        }
+    }
+    
+    // MARK: Instance Methods
+    
+    @objc func addTapped() {
+        //        let newRowIndex = items.count
+        //        let item = CheckListItem()
+        //
+        ////        item.text = " I am a new row"
+        //        item.checked = true
+        //
+        //        var titles = ["Take one", "Take two", "Take three", "Take four", "Take five", "Take six"]
+        //
+        //        let randomNumber = arc4random_uniform(UInt32(titles.count))
+        //        let title = titles[Int(randomNumber)]
+        //
+        //        item.text = title
+        //        items.append(item)
+        //
+        //        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        //        let indexPaths = [indexPath]
+        //
+        //        tableView.insertRows(at: indexPaths, with: .automatic)
+    }
+    
+    func itemDetailViewControllerDidCancel(_ controller: ItemDetailView) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func itemDetailViewController(_ controller: ItemDetailView, didFinishEditing item: CheckListItem) {
+        
+        if let index = items.index(of: item) {
+            let indexPath = IndexPath(row: index, section: 0)
+            
+            if let cell = tableView.cellForRow(at: indexPath) {
+                configureText(for: cell, with: item)
+            }
+        }
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func itemDetailViewController(_ controller: ItemDetailView, didFinishAdding item: CheckListItem) {
+        
+        let newIndexRow = items.count
+        items.append(item)
+        
+        let indexPath = IndexPath(row: newIndexRow, section: 0)
+        let indexPaths = [indexPath]
+        
+        tableView.insertRows(at: indexPaths, with: .automatic)
+        navigationController?.popViewController(animated: true)
     }
     
     func configureCheckMark(for cell: UITableViewCell, with item: CheckListItem) {
         
+        let label = cell.viewWithTag(1001) as! UILabel
+        
         if item.checked {
-            cell.accessoryType = .checkmark
+            label.text = "√"
         } else {
-            cell.accessoryType = .none
+            label.text = ""
         }
     }
+    
+    func configureText(for cell: UITableViewCell, with item: CheckListItem) {
+        let label = cell.viewWithTag(1000) as! UILabel
+        label.text = item.text
+    }
+    
+    
 }
 
